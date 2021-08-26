@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="styles.css">
-    <script src="scriptjs" defer></script>
+    <script src="script.js" defer></script>
     <title>Tic Tac Toe</title>
 </head>
 <body>
@@ -24,6 +24,19 @@
         <div class="boardSpot" data-index="20"></div>
         <div class="boardSpot" data-index="21"></div>
         <div class="boardSpot" data-index="22"></div>
+    </div>
+    <div class="modalContainer">
+        <form action = "#" class="modal">
+            <div class = "player1">
+                <label for = "firstPlayer">Player 1</label>
+                <input type = "text" name = "firstPlayer" id = "firstPlayer" required>
+            </div>
+            <div class = "player2">
+                <label for = "secondPlayer">Player 2</label>
+                <input type = "text" name = "secondPlayer" id = "secondPlayer" required>  
+            </div>
+            <button class = "submitButton">Start Game!</button>
+        </form>
         .
     </div>
 </body>

@@ -1,4 +1,7 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&family=Monoton&family=Playfair+Display&display=swap');
+*,
+*::before,
+*::after{
     box-sizing: border-box;
 }
 :root{
@@ -18,9 +21,9 @@ header{
     justify-content: center;
 }
 h1{
+    font-family:'Playfair Display', sans-serif;
     color:var(--header-color-light);
     font-size: 3.5rem;
-    font-family: sans-serif;
 }
 
 h3{
@@ -28,6 +31,7 @@ h3{
     color:var(--header-color-dark);
     top:15%;
     font-size: 2rem;
+    font-family: 'Electrolize', sans-serif;
     text-align: center;
 }
 
@@ -38,16 +42,95 @@ h3{
     flex-flow:row wrap;
     height:25.25rem;
     width:25.25rem;
+    max-width: 100%;
     margin:auto;
 }
 
 .boardSpot{
+    border-radius: 8px;
     flex:0 1 33.1%;
     background-color: rgba(22, 116, 223,0.7);
     border: 2px solid rgb(23, 219, 245);
     height: 33.1%;
     text-align: center;
     font-size: 7em;
+}
+
+.modalContainer{
+    font-family: 'Electrolize';
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    backdrop-filter: blur(9px);
+    transition: opacity 1s ease-in;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.player1,.player2{
+    width:100%;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+}
+.modal{
+    display:flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0px 10px;
+    border-radius: 10px;
+    width:25rem;
+    max-width: 80%;
+    min-height: 15rem;
+    background: rgb(59,215,54);
+    background: linear-gradient(90deg, rgba(59,215,54,1) 0%, rgba(214,233,148,1) 79%);
+}
+label{
+    font-size: 1.4rem;
+}
+input[type = "text"]{
+    border-radius: 8px;
+    outline: none;
+    width:60%;
+    font-size: 1em;
+    height:1.5rem;
+}
+
+.submitButton{
+    outline: none;
+    border-radius: 5px;
+    font-family: 'Electrolize', sans-serif;
+    font-size: 1.3rem;
+    width:9rem;
+    position: relative;
+    background-color: white;
+    transition: color 0.5s ease-in-out;
+    z-index:0;
+}
+.submitButton::before{
+    content: '';
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.5s ease-in-out;
+    background-color: red;
+    z-index:-1;
+    background-color: black;
+
+}
+.submitButton:hover::before{
+    transform: scaleX(1);
+}
+
+.submitButton:hover{
+    color:white;
 }
 
 @media screen and (max-width:525px){
