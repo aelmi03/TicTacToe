@@ -3,7 +3,7 @@ const gameBoardSpots = document.querySelectorAll(".boardSpot");
 const firstPlayerText = document.querySelector("#firstPlayer");
 const secondPlayerText = document.querySelector("#secondPlayer");
 const currentGameStatus = document.querySelector("h3");
-
+const newGameButton = document.querySelector(".newGame");
 
 const playerFactory = (playerName, playerMark) =>{
     const name = playerName;
@@ -12,7 +12,7 @@ const playerFactory = (playerName, playerMark) =>{
 }
 
 const gameBoard = (() => {
-    const myArray = [[" "," "," "],[" "," "," "],[" "," "," "]];
+    let myArray = [[" "," "," "],[" "," "," "],[" "," "," "]];
     const isAvailable = function(firstIndex,secondIndex){
         if(myArray[firstIndex][secondIndex] === " "){
             return true;
@@ -101,6 +101,7 @@ const displayController = (function(){
     let playerTwo = "";
     let currentTurn = "";
     submitButton.addEventListener("click", hideForm);
+    newGameButton.addEventListener("click", startNewGame);
     gameBoardSpots.forEach(spot => spot.addEventListener("click", playMove ));
     function hideForm(e){
        e.preventDefault();
@@ -126,7 +127,7 @@ const displayController = (function(){
 
     }
     function changeCurrentStatus(player){
-        if(currentGameStatus.textContent.includes(playerOne.name)){
+        if(currentGameStatus.textContent.indexOf(playerOne.name) === 14){
             currentGameStatus.textContent = "Current Turn: " + playerTwo.name;
         }
         else{
@@ -140,7 +141,12 @@ const displayController = (function(){
         gameBoardSpots.forEach(spot => {
             spot.style.pointerEvents = "auto";
             spot.textContent = "";
-        })
+        });
+        gameBoard.newGame();
+        const whoStartsFirst = [playerOne, playerTwo];
+        const randomDraw = Math.floor(Math.random() * 2);
+        currentGameStatus.textContent = `Current Status: ${whoStartsFirst[randomDraw].name}`;
+        (whoStartsFirst[randomDraw].name ===  playerOne.name) ? currentTurn = playerTwo.name: currentTurn =  playerOne.name;
     }
 
 })();
