@@ -22,7 +22,6 @@ const gameBoard = (() => {
         return false;
     }
     const playMove = function(mark, firstIndex,secondIndex){
-        console.log(isAvailable(firstIndex,secondIndex));
         if(isAvailable(firstIndex,secondIndex)){
            myArray[firstIndex][secondIndex] = mark;
         }
@@ -97,14 +96,14 @@ const gameBoard = (() => {
    
     const getFreePosition = function(){
         while(true){
-        for(let i =  Math.floor(Math.random() * 2); i < myArray[0].length; i++){       
-            for(let j = Math.floor(Math.random() * 2); j < myArray[0].length; j++){
-                if(myArray[i][j] === " "){
-                    return `${i} ${j}`;
+            for(let i =  Math.floor(Math.random() * 2); i < myArray[0].length; i++){       
+                for(let j = Math.floor(Math.random() * 2); j < myArray[0].length; j++){
+                     if(myArray[i][j] === " "){
+                          return `${i} ${j}`;
+                     }
                 }
-            }
-        }        
-    }
+             }        
+         }
 }
     return {spots:myArray, newGame, checkIfGameIsOver, playMove, getFreePosition};
     
