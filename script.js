@@ -88,13 +88,22 @@ const gameBoard = (() => {
         }
 
         if(everySpotIsFilled()){
-            return "It Is A Draw";
+            return "It Is A Draw!";
         }
 
         return " ";
 
     }
-    return {spots:myArray, newGame, checkIfGameIsOver, playMove};
+    const getFreePosition = function(){
+        for(let i =0; i < myArray[0].length; i++){       
+            for(let j = 0; j < myArray[0].length; j++){
+                if(myArray[i][j] === " "){
+                    return `${i} ${j}`;
+                }
+            }
+        }        
+    }
+    return {spots:myArray, newGame, checkIfGameIsOver, playMove, getFreePosition};
     
 })();
 
@@ -102,18 +111,20 @@ const displayController = (function(){
     let playerOne = "";
     let playerTwo = "";
     let currentTurn = "";
+    let gameOver = false;
+    let computerModeOn = false;
+    let compFirstMove = " ";
     quitGameButton.addEventListener("click",quitGame);
     submitButton.addEventListener("click", hideForm);
     newGameButton.addEventListener("click", startNewGame);
 
-    gameBoardSpots.forEach(spot => spot.addEventListener("click", playMove ));
     function hideForm(e){
        e.preventDefault();
-       console.log(computerPlayer.checked);
        resetGame();
        initializePlayers();
        e.target.parentNode.parentNode.style.opacity = "0";
        e.target.parentNode.parentNode.style.pointerEvents = "none";
+       gameBoardSpots.forEach(spot => spot.addEventListener("click", playMoveWithComputer ));
        initializeCurrentStatus();
     }
     function initializeCurrentStatus(){
@@ -125,21 +136,59 @@ const displayController = (function(){
         playerTwo = playerFactory((secondPlayerText.value) ? secondPlayerText.value: "O", "O");
 
     }
-    function playMove(e){
+    function playMoveWithComputer(e){
         const position = e.target.getAttribute("data-index").split(" ");
         let playerTurn = (currentTurn === "O" )? playerOne: playerTwo;
-        changeCurrentStatus();
+        if(compFirstMove === "1"){
+            playerTurn = playerOne;
+            compFirstMove = " ";
+        }
         gameBoard.playMove(playerTurn.mark ,position[0],position[1]);
-        (currentTurn === "X") ? currentTurn = "O" : currentTurn = "X";
         e.target.textContent = playerTurn.mark;
         e.target.style.pointerEvents = "none";
         if(gameBoard.checkIfGameIsOver(playerTurn) !==  " "){
             freezeBoard();
             currentGameStatus.textContent = gameBoard.checkIfGameIsOver(playerTurn);
+            gameOver = true;
         }
+        if(gameOver === true){
+            return;
+        }
+        changeCurrentStatus();
+        if(computerModeOn === true){
+            computerPlay();
+        }
+        (currentTurn === "X") ? currentTurn = "O" : currentTurn = "X";
+        e.target.textContent = playerTurn.mark;
+        e.target.style.pointerEvents = "none";
+        
 
     }
-    function changeCurrentStatus(player){
+    function computerPlay(){
+        
+        let freeSpot = gameBoard.getFreePosition();
+        if(freeSpot === undefined) return;
+        freeSpot = freeSpot.split(" ");
+        const spotOnDom = [...gameBoardSpots].filter(spot => {
+            const indexArrays = spot.getAttribute("data-index").split(" ");
+            return (indexArrays[0] === freeSpot[0] && indexArrays[1] === freeSpot[1]);
+        });
+        setTimeout(function(){
+            gameBoard.playMove(playerTwo.mark, freeSpot[0], freeSpot[1] );
+            spotOnDom[0].textContent = playerTwo.mark;
+            spotOnDom[0].style.pointerEvents = "none";
+            if(gameBoard.checkIfGameIsOver(playerTwo) !==  " "){
+                freezeBoard();
+                currentGameStatus.textContent = gameBoard.checkIfGameIsOver(playerTwo);
+                gameOver = true;
+                return;
+            }
+            currentGameStatus.textContent = "Current Turn: " + playerOne.name;
+         }, 200);
+         currentTurn = "X";
+    
+    }
+    function changeCurrentStatus(){
         if(currentGameStatus.textContent.indexOf(playerOne.name) === 14){
             currentGameStatus.textContent = "Current Turn: " + playerTwo.name;
 
@@ -163,6 +212,8 @@ const displayController = (function(){
             spot.textContent = "";
         });
         gameBoard.newGame();
+        computerModeOn = (computerPlayer.checked) ? true: false;
+        gameOver = false;
 
     }
     function startNewGame(){
@@ -174,6 +225,13 @@ const displayController = (function(){
         const whoStartsFirst = [playerOne, playerTwo];
         const randomDraw = Math.floor(Math.random() * 2);
         currentGameStatus.textContent = `Current Turn: ${whoStartsFirst[randomDraw].name}`;
+        if(whoStartsFirst[randomDraw] == playerTwo){
+            if(computerPlayer.checked){
+                computerPlay();
+                compFirstMove = "1";
+            }
+        }
+        gameOver = false;
     }
 
 })();
