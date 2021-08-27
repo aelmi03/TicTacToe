@@ -69,6 +69,7 @@ h3{
     display:flex;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(4px);
 }
 .player1,.player2{
     width:100%;
@@ -145,9 +146,10 @@ input[type = "text"]{
 }
 
 .gameOptions>button{
-    font-family: 'Playfair Display';
+    font-family: 'Electrolize';
     width:40%;
-    font-size: 1.55rem;
+    font-size: 1.6rem;
+    padding:0.2rem;
     border-radius: 8px;
     border-style: none;
     opacity: 0.8;

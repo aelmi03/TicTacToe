@@ -94,15 +94,18 @@ const gameBoard = (() => {
         return " ";
 
     }
+   
     const getFreePosition = function(){
-        for(let i =0; i < myArray[0].length; i++){       
-            for(let j = 0; j < myArray[0].length; j++){
+        while(true){
+        for(let i =  Math.floor(Math.random() * 2); i < myArray[0].length; i++){       
+            for(let j = Math.floor(Math.random() * 2); j < myArray[0].length; j++){
                 if(myArray[i][j] === " "){
                     return `${i} ${j}`;
                 }
             }
         }        
     }
+}
     return {spots:myArray, newGame, checkIfGameIsOver, playMove, getFreePosition};
     
 })();
