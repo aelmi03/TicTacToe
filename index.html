@@ -16,7 +16,6 @@
     <div class = "gameOptions">
         <button class="quit">Quit</button>
         <button class="newGame">Rematch</button>
-        
     </div>
     <h3>Current Turn:</h3>
     <div class="gameBoard">
@@ -40,6 +39,13 @@
                 <label for = "secondPlayer">Player 2</label>
                 <input type = "text" name = "secondPlayer" id = "secondPlayer" required>  
             </div>
+            <div class = "humanOrAI">
+                <p>Player 2: </p>
+                <label for = "AI">AI</label>
+                <input type = "radio" name = "secondPlayerOption" id = "AI" value = "AI">
+                <label for = "human">Human</label>
+                <input type = "radio" name = "secondPlayerOption" id = "human" value = "human">
+           </div>
             <button class = "submitButton">Start Game!</button>
         </form>
         .

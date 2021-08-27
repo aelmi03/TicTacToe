@@ -4,7 +4,9 @@ const firstPlayerText = document.querySelector("#firstPlayer");
 const secondPlayerText = document.querySelector("#secondPlayer");
 const currentGameStatus = document.querySelector("h3");
 const newGameButton = document.querySelector(".newGame");
-
+const quitGameButton = document.querySelector(".quit");
+const modalContainer = document.querySelector(".modalContainer");
+const computerPlayer = document.querySelector("#AI");
 const playerFactory = (playerName, playerMark) =>{
     const name = playerName;
     const mark = playerMark;
@@ -100,17 +102,28 @@ const displayController = (function(){
     let playerOne = "";
     let playerTwo = "";
     let currentTurn = "";
+    quitGameButton.addEventListener("click",quitGame);
     submitButton.addEventListener("click", hideForm);
     newGameButton.addEventListener("click", startNewGame);
+
     gameBoardSpots.forEach(spot => spot.addEventListener("click", playMove ));
     function hideForm(e){
        e.preventDefault();
-       playerOne = playerFactory((firstPlayerText.value) ? firstPlayerText.value : "X", "X");
-       playerTwo = playerFactory((secondPlayerText.value) ? secondPlayerText.value: "O", "O");
+       console.log(computerPlayer.checked);
+       resetGame();
+       initializePlayers();
        e.target.parentNode.parentNode.style.opacity = "0";
        e.target.parentNode.parentNode.style.pointerEvents = "none";
-       currentGameStatus.textContent = `Current Turn: ${playerOne.name}`;
-       currentTurn = "O";
+       initializeCurrentStatus();
+    }
+    function initializeCurrentStatus(){
+        currentGameStatus.textContent = `Current Turn: ${playerOne.name}`;
+        currentTurn = "O";
+    }
+    function initializePlayers(){
+        playerOne = playerFactory((firstPlayerText.value) ? firstPlayerText.value : "X", "X");
+        playerTwo = playerFactory((secondPlayerText.value) ? secondPlayerText.value: "O", "O");
+
     }
     function playMove(e){
         const position = e.target.getAttribute("data-index").split(" ");
@@ -129,6 +142,7 @@ const displayController = (function(){
     function changeCurrentStatus(player){
         if(currentGameStatus.textContent.indexOf(playerOne.name) === 14){
             currentGameStatus.textContent = "Current Turn: " + playerTwo.name;
+
         }
         else{
             currentGameStatus.textContent = "Current Turn: " + playerOne.name;
@@ -136,6 +150,20 @@ const displayController = (function(){
     }
     function freezeBoard(){
         gameBoardSpots.forEach(spot => spot.style.pointerEvents = "none");
+    }
+    function quitGame(){
+        modalContainer.style.opacity = "1";
+        modalContainer.style.pointerEvents = "auto";
+        resetGame();
+
+    }
+    function resetGame(){
+        gameBoardSpots.forEach(spot => {
+            spot.style.pointerEvents = "auto";
+            spot.textContent = "";
+        });
+        gameBoard.newGame();
+
     }
     function startNewGame(){
         gameBoardSpots.forEach(spot => {
@@ -145,8 +173,7 @@ const displayController = (function(){
         gameBoard.newGame();
         const whoStartsFirst = [playerOne, playerTwo];
         const randomDraw = Math.floor(Math.random() * 2);
-        currentGameStatus.textContent = `Current Status: ${whoStartsFirst[randomDraw].name}`;
-        (whoStartsFirst[randomDraw].name ===  playerOne.name) ? currentTurn = playerTwo.name: currentTurn =  playerOne.name;
+        currentGameStatus.textContent = `Current Turn: ${whoStartsFirst[randomDraw].name}`;
     }
 
 })();
