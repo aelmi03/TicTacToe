@@ -114,6 +114,7 @@ const displayController = (function(){
     let gameOver = false;
     let computerModeOn = false;
     let compFirstMove = " ";
+    let gameMode = "";
     quitGameButton.addEventListener("click",quitGame);
     submitButton.addEventListener("click", hideForm);
     newGameButton.addEventListener("click", startNewGame);
@@ -124,7 +125,17 @@ const displayController = (function(){
        initializePlayers();
        e.target.parentNode.parentNode.style.opacity = "0";
        e.target.parentNode.parentNode.style.pointerEvents = "none";
-       gameBoardSpots.forEach(spot => spot.addEventListener("click", playMoveWithComputer ));
+       gameBoardSpots.forEach(spot => {
+           if(computerPlayer.checked){
+            gameMode = "computer";
+           spot.addEventListener("click", playMoveWithComputer);
+
+           }
+           else{
+           spot.addEventListener("click", playMoveWithHuman)
+           gameMode = "human";
+           }
+       });
        initializeCurrentStatus();
     }
     function initializeCurrentStatus(){
@@ -158,6 +169,28 @@ const displayController = (function(){
         if(computerModeOn === true){
             computerPlay();
         }
+        (currentTurn === "X") ? currentTurn = "O" : currentTurn = "X";
+        e.target.textContent = playerTurn.mark;
+        e.target.style.pointerEvents = "none";
+        
+
+    }
+    function playMoveWithHuman(e){
+        const position = e.target.getAttribute("data-index").split(" ");
+        let playerTurn = (currentTurn === "O" )? playerOne: playerTwo;
+        gameBoard.playMove(playerTurn.mark ,position[0],position[1]);
+        e.target.textContent = playerTurn.mark;
+        e.target.style.pointerEvents = "none";
+        changeCurrentStatus();
+        if(gameBoard.checkIfGameIsOver(playerTurn) !==  " "){
+            freezeBoard();
+            currentGameStatus.textContent = gameBoard.checkIfGameIsOver(playerTurn);
+            gameOver = true;
+        }
+        if(gameOver === true){
+            return;
+        }
+       
         (currentTurn === "X") ? currentTurn = "O" : currentTurn = "X";
         e.target.textContent = playerTurn.mark;
         e.target.style.pointerEvents = "none";
@@ -203,8 +236,17 @@ const displayController = (function(){
     function quitGame(){
         modalContainer.style.opacity = "1";
         modalContainer.style.pointerEvents = "auto";
+        getRidOfEventListeners();
         resetGame();
 
+    }
+    function getRidOfEventListeners(){
+        if(gameMode === "computer"){
+            gameBoardSpots.forEach(spot => spot.removeEventListener("click", playMoveWithComputer));
+        }
+        else{
+            gameBoardSpots.forEach(spot => spot.removeEventListener("click", playMoveWithHuman))
+        }
     }
     function resetGame(){
         gameBoardSpots.forEach(spot => {
@@ -222,16 +264,19 @@ const displayController = (function(){
             spot.textContent = "";
         });
         gameBoard.newGame();
-        const whoStartsFirst = [playerOne, playerTwo];
-        const randomDraw = Math.floor(Math.random() * 2);
-        currentGameStatus.textContent = `Current Turn: ${whoStartsFirst[randomDraw].name}`;
-        if(whoStartsFirst[randomDraw] == playerTwo){
-            if(computerPlayer.checked){
-                computerPlay();
-                compFirstMove = "1";
-            }
+        currentTurn = "O";
+        currentGameStatus.textContent = `Current Turn: ${playerOne.name}`;
+        if(gameMode === "computer"){
+             const whoStartsFirst = [playerOne, playerTwo];
+             const randomDraw = Math.floor(Math.random() * 2);
+             (whoStartsFirst[randomDraw] == playerOne) ? currentTurn = "O": "X";
+             if(whoStartsFirst[randomDraw] == playerTwo){
+                 if(computerPlayer.checked){
+                    computerPlay();
+                    compFirstMove = "1";
+                  }
+              }
         }
         gameOver = false;
     }
-
 })();
